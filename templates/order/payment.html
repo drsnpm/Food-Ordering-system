@@ -1,0 +1,44 @@
+{% extends 'order/base.html' %}
+{% block content %}
+{% csrf_token %}
+<br><br>
+<center><i>This is a FAKE PAYMENT. Just for demo purposes</i></center>
+<br><br>
+<div class="container">
+    <div class="p-4 m-4 col-lg-5 mx-auto border rounded">
+        <h3>Payment Details</h3>
+        <form action="{% url 'payment' %}" method="POST" onsubmit="return confirmPayment(event)">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label>CARD NUMBER</label>
+                    <input type="text" class="form-control" id="cardNumber" placeholder="xxxx xxxx xxxx xxxx" maxlength="16" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>MONTH</label>
+                    <input type="text" class="form-control" id="expityMonth" placeholder="MM - 02" maxlength="2" required />
+                </div>
+                <div class="form-group col-md-4">
+                    <label>EXP YEAR</label>
+                    <input type="text" class="form-control" id="expityYear" placeholder="YY - 22" maxlength="2" required />
+                </div>
+                <div class="form-group col-md-4">
+                    <label>CV CODE</label>
+                    <input type="password" class="form-control" id="cvCode" placeholder="CV - xxx" maxlength="3" required />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success btn-lg btn-block">Pay</button>
+        </form>
+
+        <script>
+            function confirmPayment(event) {
+                event.preventDefault(); 
+                alert("Payment successful!");
+                event.target.submit(); 
+            }
+        </script>
+    </div>
+</div>
+{% endblock content %}

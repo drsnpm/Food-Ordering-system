@@ -1,0 +1,57 @@
+{% extends 'order/base.html' %}
+{% block content %}
+{% load cart %}
+<div class="container">
+    <div class="border rounded p-4 m-4">
+    <table class="table">
+        <h1 >Your Orders</h1>
+        <thead class="thead-dark">
+                <th>S. No</th>
+                <th>Product</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Cancel Order</th>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td><img style="width: 6rem; height: 6rem;" src="{{order.product.image.url}}" class="rounded-circle"></td>
+                <td>{{order.product.name}}</td>
+                <td>{{order.date}}</td>
+                <td>{{ order.quantity }}</td>
+                <td>₹ {{order.price}}</td>
+                <td>₹ {{ order.quantity|multiply:order.price}}</td>
+                {% if order.status %}
+                    <td> <small class="alert alert-success">Complted</small></td>
+                 {% else %}
+                    <td> <small class="alert alert-warning">Pending</small></td>
+                
+                <td>
+                    <form method="POST" action="{% url 'delete_order' order.id %}" onsubmit="return confirmDelete(event)">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Cancel</button>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+<script>
+    function confirmDelete(event) {
+      event.preventDefault();
+      const form = event.target;
+      if (confirm("Are you sure you want to cancel this order?")) {
+        alert("canceled successfully!");
+        form.submit();
+      }
+    }
+  </script>
+{% endblock %}

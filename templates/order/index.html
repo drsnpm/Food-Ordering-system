@@ -1,0 +1,79 @@
+{% extends 'order/base.html' %}
+{% block content %}
+{% load cart %}
+<div class="container-fluid mt-3">
+  <div class="row">
+
+    <div class="col-lg-3 mx-auto">
+      <ul class="list-group">
+        <a href="/" class="list-group-item list-group-item-action">All Products</a>
+        {% for category in categories %}
+        <a href="/?category={{category.id}}" class="list-group-item list-group-item-action">{{category.name}}</a>
+        {% endfor %}
+      </ul>
+    </div>
+
+
+    <div id="products" class="col-lg-8 mx-auto">
+      <div class="row mx-auto">
+        {% for product in products %}
+        <div class="card mx-auto mt-3 mb-3" id="{{product.id}}" style="width: 18rem;">
+          <img class="card-img-top" src="{{product.image.url}}">
+          <div class="card-body">
+            <h5 class="card-title">{{product.name}}</h5>
+            <p class="card-text">₹ {{product.price}}</p>
+          </div>
+          <div class="card-footer p-0">
+            {% if product|is_in_cart:request.session.cart %}
+            <div class="row no-gutters align-items-center">
+              <form action="/?category={{selected_category}}#{{product.id}}" method="post" class="col-2 p-0 text-right">
+                {% csrf_token %}
+                <input type="text" name="product" value="{{product.id}}" hidden>
+                <input type="text" name="remove" value='True' hidden>
+                <input type="submit" value=" - " class="btn btn-light">
+              </form>
+              <div class="col-8 text-center">{{ product|card_quantity:request.session.cart }} in cart</div>
+              <form action="/?category={{selected_category}}#{{product.id}}" method="post" class="col-2 p-0 text-left">
+                {% csrf_token %}
+                <input type="text" name="product" value="{{product.id}}" hidden>
+                <input type="submit" value=" + " class="btn btn-light">
+              </form>
+            </div>
+            {% else %}
+              <form action="/?category={{selected_category}}#{{product.id}}" method="post" class="btn-block">
+                {% csrf_token %}
+                <input type="text" name="product" value="{{product.id}}" hidden>
+                <input type="submit" class="form-control btn btn-primary" value="Add to Cart">
+              </form>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>      
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.update-cart').on('click', function(event) {
+      event.preventDefault();
+      var form = $(this).closest('form');
+      var url = window.location.href;
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: form.serialize(),
+        success: function(response) {
+          $('#products').html($(response).find('#products').html());
+        },
+        error: function(error) {
+          console.log("Error:", error);
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock content%}

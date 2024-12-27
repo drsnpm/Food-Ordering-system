@@ -1,0 +1,20 @@
+{% extends 'order/base.html' %}
+{% block content %}
+{% include 'order/profile-sidebar.html' %}
+<div class="col-lg-8 mx-auto">
+    <div class="row mx-auto">
+    <div class="jumbotron container">
+    <h1 class="display-4">My Profile</h1>
+    <hr class="my-4">
+    <p>Name: {{customer.name}}</p>
+    <hr class="my-4">
+    <p>Email: {{customer.email}}</p>
+    <hr class="my-4">
+    <p>Mobile Number: {{customer.mobile}}</p>
+    <hr class="my-4">
+    <p>User Name: {{customer.uname}}</p>
+</div>
+</div> 
+</div>
+</div>
+{% endblock content %}
